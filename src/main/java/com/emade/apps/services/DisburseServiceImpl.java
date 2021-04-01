@@ -36,11 +36,18 @@ public class DisburseServiceImpl implements DisburseService {
 
   @Override
   public Disbursement getDisbursementStatus(BigInteger id){
-    Disbursement disbursement = disbursementRepository.findFirstById(id);
-    if(Objects.isNull(disbursement)){
+    Disbursement disbursementFromDB = disbursementRepository.findFirstById(id);
+    if(Objects.isNull(disbursementFromDB)){
       LOGGER.info("data not found id: {}", id);
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "data not found");
     }
-    return disbursement;
+    Disbursement disbursement = bigFlipService.disbursementStatus(id);
+    if(!disbursementFromDB.getStatus().equals(disbursement.getStatus())){
+      disbursementFromDB.setStatus(disbursement.getStatus());
+      disbursementFromDB.setReceipt(disbursement.getReceipt());
+      disbursementFromDB.setTimeServed(disbursement.getTimeServed());
+      disbursementRepository.save(disbursementFromDB);
+    }
+    return disbursementFromDB;
   }
 }

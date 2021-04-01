@@ -3,6 +3,7 @@ package com.emade.apps.services;
 import com.emade.apps.dto.entity.Disbursement;
 import com.emade.apps.dto.request.DisbursementRequest;
 import com.emade.apps.services.api.BigFlipService;
+import java.math.BigInteger;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -54,5 +56,22 @@ public class BigFlipServiceImpl implements BigFlipService {
       LOGGER.error("failed to call bigFlip", ex);
     }
     return Optional.ofNullable(response).map(ResponseEntity::getBody).orElse(null);
+  }
+
+  @Override
+  public Disbursement disbursementStatus(BigInteger id){
+    String url = apiUrl + "/disburse/" + id;
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    headers.add("Authorization", apiKey);
+    HttpEntity request = new HttpEntity(headers);
+    ResponseEntity<Disbursement> response = null;
+    try {
+      response = this.restTemplate.exchange(url, HttpMethod.GET, request, Disbursement.class);
+    }catch (Exception ex){
+      LOGGER.error("failed to call bigFlip", ex);
+    }
+    return Optional.ofNullable(response).map(ResponseEntity::getBody)
+        .orElse(Disbursement.builder().build());
   }
 }
