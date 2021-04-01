@@ -7,8 +7,8 @@ import java.math.BigInteger;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,17 +25,14 @@ import org.springframework.web.server.ResponseStatusException;
 public class BigFlipServiceImpl implements BigFlipService {
   private static final Logger LOGGER = LoggerFactory.getLogger(BigFlipServiceImpl.class);
 
-  private final RestTemplate restTemplate;
+  @Autowired
+  private RestTemplate restTemplate;
 
   @Value("${bigFlip.url}")
   private String apiUrl;
 
   @Value("${bigFlip.key}")
   private String apiKey;
-
-  public BigFlipServiceImpl(RestTemplateBuilder restTemplateBuilder) {
-    this.restTemplate = restTemplateBuilder.build();
-  }
 
   @Override
   public Disbursement disbursement(DisbursementRequest disbursementRequest){
