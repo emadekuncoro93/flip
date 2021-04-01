@@ -1,7 +1,6 @@
 package com.emade.apps.services;
 
 import com.emade.apps.dto.entity.Disbursement;
-import com.emade.apps.dto.request.DisbursementRequest;
 import java.math.BigInteger;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
-public class BigFlipServiceImplTest {
+public class BigFlipServiceImplTest extends GeneralTestVariable {
   @InjectMocks
   private BigFlipServiceImpl bigFlipService;
 
@@ -26,19 +25,10 @@ public class BigFlipServiceImplTest {
   void disbursementTest(){
     ReflectionTestUtils.setField(bigFlipService, "apiUrl", "url");
     ReflectionTestUtils.setField(bigFlipService, "apiKey", "key");
-    DisbursementRequest disbursementRequest = DisbursementRequest.builder()
-        .accountNumber("test")
-        .amount(100)
-        .bankCode("test")
-        .remark("test").build();
-    Disbursement disbursement = Disbursement.builder()
-        .status("test")
-        .id(BigInteger.valueOf(1)).build();
-    ResponseEntity<Disbursement> responseEntity = ResponseEntity.of(Optional.of(disbursement));
+    ResponseEntity<Disbursement> responseEntity = ResponseEntity.of(Optional.of(DISBURSEMENT));
     Mockito.when(this.restTemplate.postForEntity(Mockito.any(), Mockito.any(), Mockito.any()))
-        .thenReturn(new ResponseEntity(disbursement, HttpStatus.OK));
-    bigFlipService.disbursement(disbursementRequest);
-    Mockito.verify(restTemplate).postForEntity(Mockito.any(), Mockito.any(), Mockito.any());
+        .thenReturn(new ResponseEntity(DISBURSEMENT, HttpStatus.OK));
+    bigFlipService.disbursement(DISBURSEMENT_REQUEST);
   }
 
   @Test
@@ -46,17 +36,9 @@ public class BigFlipServiceImplTest {
     BigInteger id = BigInteger.valueOf(1);
     ReflectionTestUtils.setField(bigFlipService, "apiUrl", "url");
     ReflectionTestUtils.setField(bigFlipService, "apiKey", "key");
-    DisbursementRequest disbursementRequest = DisbursementRequest.builder()
-        .accountNumber("test")
-        .amount(100)
-        .bankCode("test")
-        .remark("test").build();
-    Disbursement disbursement = Disbursement.builder()
-        .status("test")
-        .id(BigInteger.valueOf(1)).build();
-    ResponseEntity<Disbursement> responseEntity = ResponseEntity.of(Optional.of(disbursement));
+    ResponseEntity<Disbursement> responseEntity = ResponseEntity.of(Optional.of(DISBURSEMENT));
     Mockito.when(this.restTemplate.exchange(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.eq(Disbursement.class)))
-        .thenReturn(new ResponseEntity(disbursement, HttpStatus.OK));
+        .thenReturn(new ResponseEntity(DISBURSEMENT, HttpStatus.OK));
     bigFlipService.disbursementStatus(id);
   }
 }
