@@ -12,12 +12,14 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class BigFlipServiceImpl implements BigFlipService {
@@ -54,6 +56,7 @@ public class BigFlipServiceImpl implements BigFlipService {
       response = restTemplate.postForEntity( url, request , Disbursement.class );
     }catch (Exception ex){
       LOGGER.error("failed to call bigFlip", ex);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "data not found");
     }
     return Optional.ofNullable(response).map(ResponseEntity::getBody).orElse(null);
   }
@@ -70,6 +73,7 @@ public class BigFlipServiceImpl implements BigFlipService {
       response = this.restTemplate.exchange(url, HttpMethod.GET, request, Disbursement.class);
     }catch (Exception ex){
       LOGGER.error("failed to call bigFlip", ex);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "data not found");
     }
     return Optional.ofNullable(response).map(ResponseEntity::getBody)
         .orElse(Disbursement.builder().build());
