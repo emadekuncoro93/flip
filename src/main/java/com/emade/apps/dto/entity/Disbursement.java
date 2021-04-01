@@ -37,6 +37,23 @@ public class Disbursement {
   private String receipt;
   @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
   @JsonProperty(value = "time_served")
-  private String timeServed;
+  private Date timeServed;
   private Integer fee;
+
+  @Override
+  public String toString() {
+    return "Disbursement{" +
+        "id=" + id +
+        ", amount=" + amount +
+        ", status='" + status + '\'' +
+        ", timestamp=" + timestamp +
+        ", bankCode='" + bankCode + '\'' +
+        ", accountNumber='" + accountNumber + '\'' +
+        ", beneficiaryName='" + beneficiaryName + '\'' +
+        ", remark='" + remark + '\'' +
+        ", receipt='" + receipt + '\'' +
+        ", timeServed=" + timeServed +
+        ", fee=" + fee +
+        '}';
+  }
 }
