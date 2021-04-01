@@ -1,6 +1,8 @@
 package com.emade.apps.dto.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -20,9 +22,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Disbursement {
   @Id
-  private Integer id;
+  private BigInteger id;
   private Integer amount;
   private String status;
+  @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
   private Date timestamp;
   @JsonProperty(value = "bank_code")
   private String bankCode;
@@ -32,6 +35,7 @@ public class Disbursement {
   private String beneficiaryName;
   private String remark;
   private String receipt;
+  @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
   @JsonProperty(value = "time_served")
   private String timeServed;
   private Integer fee;

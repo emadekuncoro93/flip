@@ -5,6 +5,7 @@ import com.emade.apps.dto.request.DisbursementRequest;
 import com.emade.apps.repositories.api.DisbursementRepository;
 import com.emade.apps.services.api.BigFlipService;
 import com.emade.apps.services.api.DisburseService;
+import java.math.BigInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class DisburseServiceImpl implements DisburseService {
   public Boolean saveDisbursement(DisbursementRequest request){
     bigFlipService.disbursement(request);
     Disbursement disbursement = Disbursement.builder()
-        .id(1)
+        .id(BigInteger.valueOf(1))
         .bankCode(request.getBankCode())
         .amount(request.getAmount())
         .accountNumber(request.getAccountNumber())

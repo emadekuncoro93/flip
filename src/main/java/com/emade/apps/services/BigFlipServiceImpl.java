@@ -1,9 +1,12 @@
 package com.emade.apps.services;
 
+import com.emade.apps.dto.entity.Disbursement;
 import com.emade.apps.dto.request.DisbursementRequest;
 import com.emade.apps.services.api.BigFlipService;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,16 +23,22 @@ public class BigFlipServiceImpl implements BigFlipService {
 
   private final RestTemplate restTemplate;
 
+  @Value("${bigFlip.url}")
+  private String apiUrl;
+
+  @Value("${bigFlip.key}")
+  private String apiKey;
+
   public BigFlipServiceImpl(RestTemplateBuilder restTemplateBuilder) {
     this.restTemplate = restTemplateBuilder.build();
   }
 
   @Override
-  public Object disbursement(DisbursementRequest disbursementRequest){
-    String url = "https://nextar.flip.id/disburse";
+  public Disbursement disbursement(DisbursementRequest disbursementRequest){
+    String url = apiUrl + "/disburse";
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-    headers.add("Authorization", "Basic SHl6aW9ZN0xQNlpvTzduVFlLYkc4TzRJU2t5V25YMUp2QUVWQWh0V0tadW1vb0N6cXA0MTo=");
+    headers.add("Authorization", apiKey);
 
     MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
     map.add("remark", disbursementRequest.getRemark());
@@ -38,10 +47,12 @@ public class BigFlipServiceImpl implements BigFlipService {
     map.add("amount", disbursementRequest.getAmount().toString());
 
     HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-
-    ResponseEntity<String> response = restTemplate.postForEntity( url, request , String.class );
-    System.out.println("+++++");
-    System.out.println(response);
-    return response;
+    ResponseEntity<Disbursement> response = null;
+    try {
+      response = restTemplate.postForEntity( url, request , Disbursement.class );
+    }catch (Exception ex){
+      LOGGER.error("failed to call bigFlip", ex);
+    }
+    return Optional.ofNullable(response).map(ResponseEntity::getBody).orElse(null);
   }
 }
