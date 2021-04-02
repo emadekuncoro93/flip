@@ -25,13 +25,13 @@ public class DisburseServiceImpl implements DisburseService {
   private DisbursementRepository disbursementRepository;
 
   @Override
-  public Boolean saveDisbursement(DisbursementRequest request){
+  public Disbursement saveDisbursement(DisbursementRequest request){
     Disbursement disbursement = bigFlipService.disbursement(request);
     if(null == disbursement){
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "data not found");
     }
     disbursementRepository.save(disbursement);
-    return true;
+    return disbursement;
   }
 
   @Override

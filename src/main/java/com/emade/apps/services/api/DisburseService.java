@@ -9,7 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 public interface DisburseService {
   @Retryable(value = ResponseStatusException.class, maxAttempts = 5, backoff = @Backoff(delay = 1000))
-  Boolean saveDisbursement(DisbursementRequest request);
+  Disbursement saveDisbursement(DisbursementRequest request);
 
   @Retryable(value = ResponseStatusException.class, maxAttempts = 5, backoff = @Backoff(delay = 1000))
   Disbursement getDisbursementStatus(BigInteger id);

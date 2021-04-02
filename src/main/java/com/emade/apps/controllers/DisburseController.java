@@ -20,7 +20,7 @@ public class DisburseController {
   private DisburseService disburseService;
 
   @PostMapping
-  public Boolean saveData(@RequestBody DisbursementRequest request){
+  public Disbursement saveData(@RequestBody DisbursementRequest request){
     return disburseService.saveDisbursement(request);
   }
 
