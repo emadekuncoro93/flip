@@ -8,3 +8,6 @@
 - mvn clean install
 - mvn spring-boot:run
 - open browser http://localhost:8181/swagger-ui.html
+
+## Run test
+- mvn test
